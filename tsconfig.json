@@ -17,7 +17,15 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "ff-pagination": [
+        "dist/ff-pagination"
+      ],
+      "ff-pagination/*": [
+        "dist/ff-pagination/*"
+      ]
+    }
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

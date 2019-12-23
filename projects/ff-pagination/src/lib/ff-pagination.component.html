@@ -1,0 +1,22 @@
+<div class="ff-pagination-wrapper" *ngIf="hideWhenLessThenOnePage ? items.length > maxItems : true">
+  <div role="button" aria-label="Previous pages" class="ff-pagination-btn ff-pagination-btn-prev" *ngIf="arrow"
+       (click)="prev()" [ngClass]="{disabled: isFirst()}">
+    <ng-template [ngTemplateOutlet]="arrow?.el"></ng-template>
+  </div>
+
+  <div *ngFor="let i of pages; let idx = index" class="ff-pagination-indicator"
+       [ngClass]="{'active': idx === currentPage}"
+       (click)="setActive(i)">
+    <ng-template [ngTemplateOutlet]="indicator?.el"></ng-template>
+  </div>
+
+  <div role="button" aria-label="Next pages" class="ff-pagination-btn" *ngIf="arrow" (click)="next()"
+       [ngClass]="{disabled: isLast()}">
+    <ng-template [ngTemplateOutlet]="arrow?.el"></ng-template>
+  </div>
+
+
+</div>
+
+
+

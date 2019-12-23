@@ -124,6 +124,41 @@
           }
         }
       }
+    },
+    "ff-pagination": {
+      "projectType": "library",
+      "root": "projects/ff-pagination",
+      "sourceRoot": "projects/ff-pagination/src",
+      "prefix": "ff",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ff-pagination/tsconfig.lib.json",
+            "project": "projects/ff-pagination/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ff-pagination/src/test.ts",
+            "tsConfig": "projects/ff-pagination/tsconfig.spec.json",
+            "karmaConfig": "projects/ff-pagination/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ff-pagination/tsconfig.lib.json",
+              "projects/ff-pagination/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "ff-pagination-app"
 }

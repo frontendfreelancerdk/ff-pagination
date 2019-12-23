@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  position: relative;
+}
+
+.disabled .ff-pagination-icon {
+  color: #24292e;
+  cursor: default;
+}
+
+.ff-pagination-icon {
+  color: #24292e;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.ff-pagination-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ff-pagination-btn {
+  display: flex;
+  margin: 0 10px;
+}
+
+.ff-pagination-btn-prev {
+  transform-origin: center;
+  transform: scale(-1, 1);
+}
