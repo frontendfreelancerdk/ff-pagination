@@ -41,90 +41,53 @@ export class AppModule { }
 
 Once ff-pagination is imported, you can use its component in your Angular application:
 
-```xml
-<!-- You can now use library component in your.component.html -->
-<ff-pagination></ff-pagination>
-```
-
-You should put slides (1*), indicators (2*) and arrows (3*) as ng-content:
-
 ```html
-<ff-pagination>
-<!-- (1) You should mark you slide with *ffCarouselItem directive to let ff-pagination know that it's slide -->
-<!-- Then you can make your own structure and styles for slide -->
-    <div *ffCarouselItem class="slide-wrapper">
-      <img src="first_slide_image.jpg" class="slide-img">
-      <h2 class="slide-header"></h2>
-      <p class="slide-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. 
-         Exercitationem illo mollitia natus nihil
-         perspiciatis provident quisquam sunt. Ad eaque quibusdam voluptas! Amet autem blanditiis cupiditate
-         dolores in nulla, omnis praesentium.</p>
-    </div>
-<!-- (2) If you want to use slide indicators you need to add your indicator element 
-     and mark it as indicator with *ffCarouselIndicator directive. -->
-  <div *ffCarouselIndicator class="indicator">*</div>
-<!-- (3) Also if you want to use arrows - just add RIGHT arrow element and mark it with *ffCarouselArrow directive-->
-  <div *ffCarouselArrow class="arrow"> ></div>
+<!-- Now you can use library component in your.component.html -->
+<!-- Put your items array to [items] property. It's required.-->
+<ff-pagination [items]="[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]">
+<!-- If you want to use arrows put RIGHT arrow as content and mark it with *ffArrow directive -->
+  <div *ffArrow class="myArrow"> > </div>
+<!-- The same with indicators (navigations). But use *ffIndicator directive. 
+If you want that component inserts as inner html page number 
+you should mark indicator also with ffIndicatorNumber directive -->
+  <div *ffIndicator ffIndicatorNumber class="myIndicator"></div>
 </ff-pagination>
 ```
 
 ## API
 
 Selector: `ff-pagination`  
-Exported as: `FFCarousel`  
+Exported as: `ffPagination`  
 
 #### Properties
+
 ```typescript
-  @Input() activeId: number = 0;
+  @Input() items: any[];
 ```
-> The [activeId] attribute set current slide by ID.
+>  The [items] attribute is required attribute. You should put here array with your data, that you want to paginate
+
+```typescript
+  @Input() currentPage: number = 0;
+```
+> The [currentPage] attribute set current page by number.
 > To set third slide as active use:
-> <ff-pagination activeId="2"></ff-pagination> 
+> <ff-pagination [currentPage]="2"></ff-pagination> 
 
 ```typescript
-  @Input() interval: number = 3000;
+  @Input() maxItems: number = 3;
 ```
->  The [interval] attribute binding the time in milliseconds before slide change
+>  The [maxItems] attribute sets max length of items in each page. By default - 3
 
 ```typescript
-  @Input() autoplay: boolean = true;
+  @Input() hideWhenLessThenOnePage: boolean = true;
 ```
->  If [autoplay] is false slider will not switch slides
+>  If [hideWhenLessThenOnePage] is true - hide pagination (arrows/indicators) when your 
+> items array has only 1 page to show. Default value is true
 
 ```typescript
-  @Input() pauseOnHover: boolean = true;
+  @Output() pageChanged: EventEmitter<any[]>;
 ```
->  If [pauseOnHover] is true slider will not switch slides while mouse over the slider
-
-```typescript
-  @Input() keyboard: boolean = true;
-```
->  If [keyboard] is true allows switch slides using keyboard 'arrow left' and 'arrow right'.
-
-```typescript
-  @Input() loop: boolean = true;
-```
->  If [loop] is true allows switch slides from last slide to first slide.
-
-```typescript
-  @Input() showArrows: boolean = true;
-```
->  If [showArrows] is true - will show arrows (buttons 'next' and 'previous')
-
-```typescript
-  @Input() showIndicators: boolean = false;
-```
->  If [showIndicators] is true - will show slides indicators (slider navigation)
-
-```typescript
-  @Input() btnOverlay: boolean = false;
-```
->  If [btnOverlay] is true will wrap arrows (next and prev) with overlay
-
-```typescript
-  @Output() switched: EventEmitter<number>;
-```
-> Event triggered when slide was switched and send current active slide ID 
+> Event triggered when page was changed and send current page (part of your items data, that you can show in current page)
 
 
 #### Methods
@@ -132,64 +95,73 @@ Exported as: `FFCarousel`
 ```typescript
   next: ()=>: number; 
 ```
-> You can call this method to show next slide. Method returns active slide ID after switched.
+> You can call this method to show next page. Method returns current page number after switched.
 
 ```typescript
   prev: ()=>: number; 
 ```
-> You can call this method to show previous slide. Method returns active slide ID after switched.
+>  You can call this method to show previous page. Method returns current page number after switched.
 
 ```typescript
-  setActive: (id: number)=>: void; 
+  first: ()=>: number; 
 ```
-> For set active slide by ID. E.g from external navigation.
+> Selected first page
 
 ```typescript
-  stop: ()=>: void; 
-  play: ()=>: void; 
+  last: ()=>: number; 
 ```
-> stop and play methods are responsible for autoplay. 
+>  Selected last page
+
+```typescript
+  selectPage: (id: number)=>: number; 
+```
+> For selecting some page by number. E.g from external navigation.
+
+```typescript
+  isFirst: ()=>: boolean; 
+  isLast: ()=>: boolean; 
+```
+> isFirst() and isLast() methods shows if current page is first/last. 
 
 ## Example
 
 `app.component.html`
 ```html
-<ff-pagination [btnOverlay]="true" (switched)="switched()" #myCarousel="FFCarousel">
-  <ng-container *ngFor="let img of images">
-    <div *ffCarouselItem class="imgWrapper">
-      <img src="{{img}}" alt="">
-    </div>
-  </ng-container>
-  <div *ffCarouselIndicator class="indicator">*</div>
-  <div *ffCarouselArrow class="arrow"> ></div>
+<ng-container *ngFor="let item of itemsToshow"><p>{{item}}</p></ng-container>
+
+<ff-pagination [items]="allItems" [maxItems]="3" (pageChanged)="onPageChanges($event)"
+               #myPagination="ffPagination">
+  <div *ffArrow class="myArrow"> ></div>
+  <div *ffIndicator ffIndicatorNumber class="myIndicator"></div>
 </ff-pagination>
 
-<button (click)="myCarousel.prev()">Some external 'prev' button</button>
-<button (click)="myCarousel.next()">Some external 'next' button</button>
+<button (click)="myPagination.prev()">Some external 'prev' button</button>
+<button (click)="myPagination.next()">Some external 'next' button</button>
+
 ```
 
 `app.component.css`
 ```css
-.imgWrapper {
-  padding-top: 55%;
+.myIndicator {
+  border: 1px solid darkslategray;
+  margin: 3px;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  user-select: none;
 }
 
-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-}
-
-.indicator {
-  color: white;
-}
-.arrow{
+.myArrow {
+  color: darkslategray;
   font-size: 30px;
-  color: #fff;
+  user-select: none;
 }
+
 ```
 
 `app.component.ts`
@@ -202,12 +174,16 @@ import {Component} from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  images = [1, 2, 3, 4, 5, 6, 7].map(() => `https://picsum.photos/900/500?random&t=${Math.random()}`);
+  allItems: any[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  itemsToshow: any[];
 
-  switched(id:number) {
-    console.log(`Switched! Current slide is ${id}`);
+  onPageChanges(e: any[]) {
+    this.itemsToshow = e;
+    console.log(this.itemsToshow);
   }
 }
+
+
 ```
 ## License
 

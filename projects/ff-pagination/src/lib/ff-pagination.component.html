@@ -6,7 +6,7 @@
 
   <div *ngFor="let i of pages; let idx = index" class="ff-pagination-indicator"
        [ngClass]="{'active': idx === currentPage}"
-       (click)="setActive(i)">
+       (click)="selectPage(i)">
     <ng-template [ngTemplateOutlet]="indicator?.el"></ng-template>
   </div>
 

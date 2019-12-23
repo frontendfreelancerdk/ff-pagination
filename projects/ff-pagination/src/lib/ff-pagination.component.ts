@@ -14,11 +14,13 @@ import {FFArrowDirective} from './ff-arrow.directive';
 import {FFIndicatorDirective} from './ff-indicator.directive';
 import {isPlatformBrowser} from '@angular/common';
 import {FFIndicatorNumberDirective} from './ff-indicator-number.directive';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'ff-pagination',
   templateUrl: './ff-pagination.component.html',
-  styleUrls: ['./ff-pagination.component.scss']
+  styleUrls: ['./ff-pagination.component.scss'],
+  exportAs: 'ffPagination'
 })
 
 export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestroy {
@@ -27,6 +29,8 @@ export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestro
   @ContentChildren(FFIndicatorNumberDirective) numbers: QueryList<FFIndicatorNumberDirective>;
   private _init: boolean = false;
   private _items: any[] = [];
+  private subscription: Subscription;
+
   get items(): any[] {
     return this._items;
   }
@@ -89,6 +93,7 @@ export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestro
     if (!this.isFirst()) {
       this.currentPage -= 1;
       this.emit();
+      return this.currentPage;
     }
   }
 
@@ -96,6 +101,7 @@ export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestro
     if (!this.isLast()) {
       this.currentPage += 1;
       this.emit();
+      return this.currentPage;
     }
   }
 
@@ -103,6 +109,7 @@ export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestro
     if (n !== this.currentPage) {
       this.currentPage = n;
       this.emit();
+      return this.currentPage;
     }
   }
 
@@ -118,12 +125,8 @@ export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestro
     if (!this.isFirst()) {
       this.currentPage = 0;
       this.emit();
+      return this.currentPage;
     }
-  }
-
-  setActive(i) {
-    this.currentPage = i;
-    this.emit();
   }
 
   last() {
@@ -133,14 +136,14 @@ export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestro
     }
   }
 
-  emit() {
+  private emit() {
     const startIdx = this.currentPage * this.maxItems;
     this.pageChanged.emit(this.items.slice(startIdx, startIdx + this.maxItems));
   }
 
   ngAfterContentInit(): void {
     if (isPlatformBrowser(this._platformId)) {
-      this.numbers.changes.subscribe((queryList) => {
+      this.subscription = this.numbers.changes.subscribe((queryList) => {
         let idx = 0;
         queryList.map(item => {
           item.el.nativeElement.innerHTML = ++idx;
@@ -150,5 +153,6 @@ export class FFPaginationComponent implements OnInit, AfterContentInit, OnDestro
   }
 
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

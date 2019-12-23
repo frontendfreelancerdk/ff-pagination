@@ -1,4 +1,10 @@
-<ff-pagination [items]="[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]" [maxItems]="3" (pageChanged)="onPageChanges($event)">
-  <div *ffArrow> ></div>
+<ng-container *ngFor="let item of itemsToshow"><p>{{item}}</p></ng-container>
+
+<ff-pagination [items]="allItems" [maxItems]="3" (pageChanged)="onPageChanges($event)"
+               #myPagination="ffPagination">
+  <div *ffArrow class="myArrow"> ></div>
   <div *ffIndicator ffIndicatorNumber class="myIndicator"></div>
 </ff-pagination>
+
+<button (click)="myPagination.prev()">Some external 'prev' button</button>
+<button (click)="myPagination.next()">Some external 'next' button</button>

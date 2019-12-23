@@ -1,5 +1,6 @@
 .myIndicator {
-  border: 2px solid red;
+  border: 1px solid darkslategray;
+  margin: 3px;
   width: 20px;
   height: 20px;
   font-size: 12px;
@@ -7,4 +8,12 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  user-select: none;
+}
+
+.myArrow {
+  color: darkslategray;
+  font-size: 30px;
+  user-select: none;
 }
